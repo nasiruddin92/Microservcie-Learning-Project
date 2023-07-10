@@ -4,6 +4,7 @@ package com.naba.tech.service.controllers;
 import com.naba.tech.service.entities.User;
 import com.naba.tech.service.services.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ public class UserController {
     ResponseEntity<User> createUser(@RequestBody User user){
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
-
+    private int retryCount=1;
     @GetMapping("/{userId}")
-    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod ="ratingHotelFallBack")
+//    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod ="ratingHotelFallBack")
+    @Retry(name ="ratingHotelService", fallbackMethod ="ratingHotelFallBack")
     ResponseEntity<User> getUserById(@PathVariable String userId){
+        logger.info("Retry count: {}",retryCount);
+        retryCount++;
         return new ResponseEntity<>(userService.getUserById(userId),HttpStatus.OK);
     }
 
