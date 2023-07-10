@@ -4,6 +4,7 @@ package com.naba.tech.service.controllers;
 import com.naba.tech.service.entities.User;
 import com.naba.tech.service.services.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,8 @@ public class UserController {
     private int retryCount=1;
     @GetMapping("/{userId}")
 //    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod ="ratingHotelFallBack")
-    @Retry(name ="ratingHotelService", fallbackMethod ="ratingHotelFallBack")
+//    @Retry(name ="ratingHotelService", fallbackMethod ="ratingHotelFallBack")
+    @RateLimiter(name ="userRateLimiter",fallbackMethod ="ratingHotelFallBack")
     ResponseEntity<User> getUserById(@PathVariable String userId){
         logger.info("Retry count: {}",retryCount);
         retryCount++;

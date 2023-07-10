@@ -58,6 +58,12 @@ resilience4j:
       ratingHotelService:
         max-attempts: 6
         wait-duration: 3s
+  ratelimiter:
+    instances:
+      ratingHotelFallBack:
+        limit-refresh-period: 4s
+        limit-for-period: 2
+        timeout-duration: 2s
 
 
 #      defaultZone: http://localhost:8761/eureka
