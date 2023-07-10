@@ -7,7 +7,11 @@ import com.naba.tech.service.exceptions.ResourceNotFoundException;
 import com.naba.tech.service.external.services.HotelService;
 import com.naba.tech.service.repositories.UserRepository;
 import com.naba.tech.service.services.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -60,6 +64,8 @@ public class UserServiceImpl implements UserService {
         }
         return userArrayList;
     }
+
+
 
     @Override
     public User getUserById(String userId) {

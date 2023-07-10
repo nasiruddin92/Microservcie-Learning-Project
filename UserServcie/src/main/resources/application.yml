@@ -20,6 +20,7 @@ spring:
   config:
     import: optional:configserver:http://localhost:8085
 
+
 #eureka:
 #  instance:
 #    prefer-ip-address: true
@@ -27,4 +28,31 @@ spring:
 #    fetch-registry: true
 #    register-with-eureka: true
 #    service-url:
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+
 #      defaultZone: http://localhost:8761/eureka
